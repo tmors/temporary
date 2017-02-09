@@ -112,6 +112,9 @@ def LSA(matrix):
 # build index_word_matrix according to word_index_matrix(words_dict)
 def buildIndexWordMatrix(words_dict):
     global index_word_dict
+    for i in words_dict:
+        index = words_dict.get(i)
+        index_word_dict[index] = i
     return buildIndexWordMatrix
 
 
@@ -130,13 +133,33 @@ def getWordWeightByWord(word):
 
 
 # print the word emmbedding
-def printWordEmmbedding(U):
+def printWordEmmbedding(U, length):
     cur = 0
+    buildIndexWordMatrix(words_dict)
     for i in U:
         word = index_word_dict.get(cur)
-        print(word, i)
+        print(word, i[0, 0:length])
         cur = cur + 1
     return
+
+
+def getDistanceBetweenVectors(curEmbedding, targetEmbedding):
+    disEmbedding = curEmbedding - targetEmbedding
+
+    disPow = (disEmbedding * disEmbedding.T)[0, 0]
+    disSqrt = disPow ** 0.5
+    return disSqrt
+
+
+def calcDistanceByWord(word, U, length):
+    index = words_dict.get(word)
+    curEmbedding = U[index]
+    distanceArray = []
+    for i in U:
+        dis = getDistanceBetweenVectors(curEmbedding[0, 0:length], i[0, 0:length])
+        distanceArray.append(dis)
+
+    return distanceArray
 
 if __name__=="__main__":
     path = "/usr/dataSet"
@@ -148,7 +171,8 @@ if __name__=="__main__":
 
     wordWeight = calcWordWeight(words_articles_matrix)
     U, Sigma, VT = LSA(words_articles_matrix)
-    print(words_articles_matrix)
+    length = 3
+    calcDistanceByWord('美国', U, U.shape[0])
 
 #svd
 
