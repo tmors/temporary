@@ -164,10 +164,16 @@ def calcDistanceByWord(word, U, length):
         curDict = {}
         curDict['word'] = index_word_dict.get(i)
         curDict['distance'] = dis
+        curDict['weight'] = wordsWeight[i]
         distanceListDict.append(curDict)
 
     sortedList = heapq.nlargest(distanceListDict.__len__(), distanceListDict, key=lambda s: s['distance'])
     return sortedList
+
+
+# print the distances and weight of every word with others to explain effects of LSA
+def printAllWordsDistanceAndWeight():
+    return
 
 if __name__=="__main__":
     path = "/usr/dataSet"
