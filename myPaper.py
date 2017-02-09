@@ -1,4 +1,5 @@
 #coding=utf-8
+import heapq
 import os.path
 from multiprocessing import Queue
 
@@ -9,6 +10,7 @@ words_dict = {}
 articles_dict = {}
 words_articles_matrix = []
 index_word_dict = {}
+wordsWeight = []
 
 def loadData():
     return [[1, 1, 1, 0, 0],
@@ -40,7 +42,7 @@ def file2dataSet(fileList):
     print("start to read dataSet")
     stopwords = set([line.strip() for line in open('stopwords.txt')])
     partOfSpeech = {};
-    fileCount = 3
+    fileCount = 4
     words_dict = {}
     articles_dict = {}
     words_cur_location = 0
@@ -51,19 +53,19 @@ def file2dataSet(fileList):
     print("init the words_articles_matrix compeleted,wordsCountPredict = ",wordsCountPredict,", articlesCountPredict =", articlesCountPredict)
     #process current article
     for curPath in fileList:
-        curFile = open(curPath,"r")
-        print("reading current fiel:",curPath)
-        article_path = curPath
-        articles_dict[article_path] = articles_cur_location
-
-        fileLines = curFile.readlines()
-        result = ""
         if (fileCount > 0):
             fileCount = fileCount - 1
         else:
-            return
+            break
+        curFile = open(curPath,"r")
+
+        print("reading current fiel:",curPath)
+        article_path = curPath
+        articles_dict[article_path] = articles_cur_location
+        result = ""
         #set up two dict,(words dict and article dict) to indicate the location of word or article in the 2dim-matrix
         print("reading:"+ curPath)
+        fileLines = curFile.readlines()
         for line in fileLines:
 
             str = line.strip()
@@ -128,8 +130,8 @@ def getWordByIndex(index):
 def getWordWeightByWord(word):
     word_index = words_dict.get(word)
     word_frequency = words_articles_matrix[word_index]
-    print(word, word_frequency)
-    return word_frequency
+    wordWeight = wordsWeight[word_index]
+    return wordWeight
 
 
 # print the word emmbedding
@@ -145,8 +147,10 @@ def printWordEmmbedding(U, length):
 
 def getDistanceBetweenVectors(curEmbedding, targetEmbedding):
     disEmbedding = curEmbedding - targetEmbedding
-
-    disPow = (disEmbedding * disEmbedding.T)[0, 0]
+    sum = 0
+    for i in range(0, disEmbedding.shape[1]):
+        sum = sum + disEmbedding[0, i] ** 2
+    disPow = sum
     disSqrt = disPow ** 0.5
     return disSqrt
 
@@ -154,25 +158,31 @@ def getDistanceBetweenVectors(curEmbedding, targetEmbedding):
 def calcDistanceByWord(word, U, length):
     index = words_dict.get(word)
     curEmbedding = U[index]
-    distanceArray = []
-    for i in U:
-        dis = getDistanceBetweenVectors(curEmbedding[0, 0:length], i[0, 0:length])
-        distanceArray.append(dis)
+    distanceListDict = []
+    for i in range(0, U.shape[0]):
+        dis = getDistanceBetweenVectors(curEmbedding[0, 0:length], U[i][0, 0:length])
+        curDict = {}
+        curDict['word'] = index_word_dict.get(i)
+        curDict['distance'] = dis
+        distanceListDict.append(curDict)
 
-    return distanceArray
+    sortedList = heapq.nlargest(distanceListDict.__len__(), distanceListDict, key=lambda s: s['distance'])
+    return sortedList
 
 if __name__=="__main__":
     path = "/usr/dataSet"
     fileList = loadFile(path)
     for i in fileList:
         print(i)
-    global words_dict, articles_dict, words_articles_matrix
+    global words_dict, articles_dict, words_articles_matrix, wordsWeight
     words_dict,articles_dict,words_articles_matrix  = file2dataSet(fileList)
 
-    wordWeight = calcWordWeight(words_articles_matrix)
+    wordsWeight = calcWordWeight(words_articles_matrix)
     U, Sigma, VT = LSA(words_articles_matrix)
-    length = 3
-    calcDistanceByWord('美国', U, U.shape[0])
+    buildIndexWordMatrix(words_dict)
+    length = Sigma.size
+    keyword = '手机'
+    calcDistanceByWord(keyword, U, length)
 
 #svd
 
