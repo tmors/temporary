@@ -1,10 +1,15 @@
 #coding=utf-8
-from numpy import *
 import os.path
 from multiprocessing import Queue
-import jieba
+
 import jieba.posseg as pseg
-import scipy
+from numpy import *
+
+words_dict = {}
+articles_dict = {}
+words_articles_matrix = []
+index_word_dict = {}
+
 def loadData():
     return [[1, 1, 1, 0, 0],
             [2, 2, 2, 0, 0],
@@ -82,21 +87,67 @@ def file2dataSet(fileList):
         print("current file finished:",curPath)
     #返回词-文章矩阵
     words_articles_matrix = mat(words_articles_matrix)
+
     return words_dict,articles_dict,words_articles_matrix[0:words_dict.__len__(),0:articles_dict.__len__()]
 
 
+# calc word's weight use tf-idf
+def calcWordWeight(words_articles_matrix):
+    sumOfWordsApperance = sum(words_articles_matrix)
+    wordWeight = []
+    for i in words_articles_matrix:
+        sumOfCurWord = sum(i)
+        curWeight = -i * log(sumOfCurWord / sumOfWordsApperance)
+        wordWeight.append(sum(curWeight))
+    return wordWeight
 
+
+# SVD return SVD matrix
 def LSA(matrix):
     #进行SVD分解
-    return
+    U, Sigma, VT = linalg.svd(matrix)
+    return U, Sigma, VT
 
+
+# build index_word_matrix according to word_index_matrix(words_dict)
+def buildIndexWordMatrix(words_dict):
+    global index_word_dict
+    return buildIndexWordMatrix
+
+
+# get Word By Index from index_word_dict
+def getWordByIndex(index):
+    word = index_word_dict.get(index)
+    return word
+
+
+# get word weight by word from words_dict
+def getWordWeightByWord(word):
+    word_index = words_dict.get(word)
+    word_frequency = words_articles_matrix[word_index]
+    print(word, word_frequency)
+    return word_frequency
+
+
+# print the word emmbedding
+def printWordEmmbedding(U):
+    cur = 0
+    for i in U:
+        word = index_word_dict.get(cur)
+        print(word, i)
+        cur = cur + 1
+    return
 
 if __name__=="__main__":
     path = "/usr/dataSet"
     fileList = loadFile(path)
     for i in fileList:
-        print (i)
+        print(i)
+    global words_dict, articles_dict, words_articles_matrix
     words_dict,articles_dict,words_articles_matrix  = file2dataSet(fileList)
+
+    wordWeight = calcWordWeight(words_articles_matrix)
+    U, Sigma, VT = LSA(words_articles_matrix)
     print(words_articles_matrix)
 
 #svd
