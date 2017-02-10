@@ -155,24 +155,48 @@ def getDistanceBetweenVectors(curEmbedding, targetEmbedding):
     return disSqrt
 
 
-def calcDistanceByWord(word, U, length):
+def calcDistanceBetweenTwoWords(sourceWord, targetWord, U, length):
+    indexSourceWord = words_dict.get(sourceWord)
+    indexTargetWord = words_dict.get(targetWord)
+    distance = getDistanceBetweenVectors(U[indexSourceWord][0, 0:length], U[indexTargetWord][0, 0:length])
+    return distance
+
+
+def calcDistanceBetweenTwoIndex(sourceIndex, targetIndex, U, length):
+    distance = getDistanceBetweenVectors(U[sourceIndex][0, 0:length], U[targetIndex][0, 0:length])
+    return distance
+
+
+def printAllEmbeddingLimitedBySigma(U, length):
+    for i in range(0, U.shape[0]):
+        word = index_word_dict.get(i)
+        print(word, U[i][0, 0:length])
+    return
+
+
+def calcDistanceByWord(word, U, length, top=5):
     index = words_dict.get(word)
     curEmbedding = U[index]
     distanceListDict = []
     for i in range(0, U.shape[0]):
+        if index == i:
+            continue
         dis = getDistanceBetweenVectors(curEmbedding[0, 0:length], U[i][0, 0:length])
         curDict = {}
         curDict['word'] = index_word_dict.get(i)
         curDict['distance'] = dis
         curDict['weight'] = wordsWeight[i]
         distanceListDict.append(curDict)
-
-    sortedList = heapq.nlargest(distanceListDict.__len__(), distanceListDict, key=lambda s: s['distance'])
+    # we will find the nearest point in the distanceList
+    sortedList = heapq.nsmallest(top, distanceListDict, key=lambda s: s['distance'])
     return sortedList
 
 
 # print the distances and weight of every word with others to explain effects of LSA
-def printAllWordsDistanceAndWeight():
+def printAllWordsDistanceAndWeight(words_dict, U, length, top=5):
+    for word in words_dict:
+        sortedList = calcDistanceByWord(word, U, length, top)
+        print(word, sortedList)
     return
 
 if __name__=="__main__":
@@ -182,14 +206,15 @@ if __name__=="__main__":
         print(i)
     global words_dict, articles_dict, words_articles_matrix, wordsWeight
     words_dict,articles_dict,words_articles_matrix  = file2dataSet(fileList)
-
     wordsWeight = calcWordWeight(words_articles_matrix)
     U, Sigma, VT = LSA(words_articles_matrix)
     buildIndexWordMatrix(words_dict)
     length = Sigma.size
-    keyword = '手机'
-    calcDistanceByWord(keyword, U, length)
+    printAllWordsDistanceAndWeight(words_dict, U, length)
 
+
+def search():
+    return
 #svd
 
 #u, sigma, vt = linalg.svd(data)
