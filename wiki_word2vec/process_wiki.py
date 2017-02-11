@@ -1,8 +1,7 @@
 __author__ = 'huang'
 
-
-import os
 import logging
+import os
 import sys
 
 from gensim.corpora import WikiCorpus
@@ -21,13 +20,13 @@ if __name__=='__main__':
         sys.exit(1)
 
     inp, outp = sys.argv[1:3]
-    space = ' '
+    space = b' '
     i = 0
 
     output = open(outp, 'w')
     wiki = WikiCorpus(inp, lemmatize=False, dictionary={})
     for text in wiki.get_texts():
-        output.write(space.join(text) + '\n')
+        output.write(space.join(text).decode('utf-8') + '\n')
         i = i + 1
         if i % 10000 == 0:
             logger.info('Saved ' + str(i) + ' articles')

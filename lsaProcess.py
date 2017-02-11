@@ -1,7 +1,5 @@
 # coding=utf-8
 import heapq
-import os.path
-from multiprocessing import Queue
 
 import jieba.posseg as pseg
 from numpy import *
@@ -22,26 +20,6 @@ def loadData():
             [5, 5, 3, 2, 2],
             [0, 0, 0, 3, 3],
             [0, 0, 0, 6, 6]]
-
-
-# 读取数据集文件
-def loadFile(path):
-    # load the dataSet
-    q = Queue()
-    q.put(path)
-    fileList = []
-    while (q.qsize() != 0):
-        curPath = q.get()
-        if (os.path.isdir(curPath)):
-            curDir = os.listdir(curPath)
-            for i in curDir:
-                q.put(curPath + "/" + i)
-        else:
-            ext = os.path.splitext(curPath)
-            if (ext[1] == (".txt")):
-                fileList.extend([curPath])
-    print("reading file directory compepleted")
-    return fileList
 
 
 # 读取数据集

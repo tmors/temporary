@@ -1,9 +1,13 @@
 #coding=utf-8
+from commonProcess import *
 from lsaProcess import *
+from word2vecProcess import *
+
+path = "/usr/dataSet"
 
 
-if __name__=="__main__":
-    path = "/usr/dataSet"
+def invokeLSAProcess():
+    global path
     fileList = loadFile(path)
     for i in fileList:
         print(i)
@@ -15,7 +19,19 @@ if __name__=="__main__":
     length = Sigma.size
     printAllWordsDistanceAndWeight(words_dict, U, length)
 
-# TODO word2vec part
+
+def invokeWord2VecProcess():
+    global path
+    fileList = loadFile(path)
+    for i in fileList:
+        print(i)
+    model = generateWord2VecModel(fileList)
+    print(model)
+
+
+if __name__ == "__main__":
+    invokeWord2VecProcess()
+
 
 
 #svd
