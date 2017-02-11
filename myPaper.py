@@ -11,7 +11,8 @@ articles_dict = {}
 words_articles_matrix = []
 index_word_dict = {}
 wordsWeight = []
-
+# TODO pos_tagging can be used to extend word
+pos_dict = {}
 def loadData():
     return [[1, 1, 1, 0, 0],
             [2, 2, 2, 0, 0],
@@ -42,14 +43,14 @@ def file2dataSet(fileList):
     print("start to read dataSet")
     stopwords = set([line.strip() for line in open('stopwords.txt')])
     partOfSpeech = {};
-    fileCount = 4
+    fileCount = 8
     words_dict = {}
     articles_dict = {}
     words_cur_location = 0
     articles_cur_location = 0;
     wordsCountPredict = 100000
     articlesCountPredict = 100
-    words_articles_matrix = [[0 for i in range(articlesCountPredict)] for j in range(wordsCountPredict)]
+    words_articles_matrix = []
     print("init the words_articles_matrix compeleted,wordsCountPredict = ",wordsCountPredict,", articlesCountPredict =", articlesCountPredict)
     #process current article
     for curPath in fileList:
@@ -72,7 +73,9 @@ def file2dataSet(fileList):
             words = pseg.cut(str)
             #去停用词
             for word,flag in words:
+
                 if(word not in stopwords and word != '﻿'):
+                    pos_dict[word] = flag
                     if(True):
                         #去除词性
                         result = result +" " +  word + flag   #去停用词
@@ -80,6 +83,7 @@ def file2dataSet(fileList):
                         getWordIndex = words_dict.get(word)
                         if(getWordIndex is None):
                             words_dict[word]=words_cur_location
+                            words_articles_matrix.append([0 for i in range(0, articlesCountPredict)])
                             words_articles_matrix[words_cur_location][articles_cur_location] += 1
                             words_cur_location = words_cur_location + 1
                         else:
@@ -188,8 +192,9 @@ def calcDistanceByWord(word, U, length, top=5):
         curDict['weight'] = wordsWeight[i]
         distanceListDict.append(curDict)
     # we will find the nearest point in the distanceList
-    sortedList = heapq.nsmallest(top, distanceListDict, key=lambda s: s['distance'])
-    return sortedList
+    sortedListByDistance = heapq.nsmallest(top, distanceListDict, key=lambda s: s['distance'])
+    sortedListByWeight = heapq.nlargest(top, sortedListByDistance, key=lambda s: s['weight'])
+    return sortedListByWeight
 
 
 # print the distances and weight of every word with others to explain effects of LSA
