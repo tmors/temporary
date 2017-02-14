@@ -22,12 +22,24 @@ def loadData():
             [0, 0, 0, 6, 6]]
 
 
-# 读取数据集
+def loadWikiCorups(wikiPath):
+    stopwords = set([line.strip() for line in open('stopwords.txt')])
+    print("reading current fiel:", wikiPath)
+    wikiPath = open(wikiPath, "r", encoding="utf-8")
+    space = ' '
+    while (wikiPath.readable()):
+        curLine = wikiPath.readline()
+        splitedLine = curLine.split(" ")
+        words = pseg.cut(str)
+        str = space.join(words)
+
+
+# 读取自己的数据集
 def file2dataSet(fileList):
     print("start to read dataSet")
     stopwords = set([line.strip() for line in open('stopwords.txt')])
     partOfSpeech = {};
-    fileCount = 8
+    fileCount = 1
     words_dict = {}
     articles_dict = {}
     words_cur_location = 0

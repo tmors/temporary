@@ -5,6 +5,12 @@ from queue import Queue
 from langconv import *
 
 
+# 1. read the wiki corups and write those to a txt file
+# 2. tranfer the traditional chinese to simplified chinese
+# 3. split these corups (one article per line)
+# 4. 2 branches
+# 5. branche A: LSA use the file to build term-document matrix
+# 5. branche B: Word2Vec add the file to the model
 def loadFile(path):
     # load the dataSet
     q = Queue()
@@ -26,14 +32,16 @@ def loadFile(path):
 
 def tranditional2simplified(filePath):
     # 转换繁体到简体
-
-
     curFile = open(filePath, "r")
     output = open("/usr/dataSet/wiki/simplifiedCorup.txt", 'w')
+    i = 0
     while curFile.readable():
         curLine = curFile.readline()
         line = Converter('zh-hans').convert(curLine)
         output.write(line)
+        i = i + 1
+        if i % 100 == 0:
+            print(i, ":finished")
     print(line)
     return
 

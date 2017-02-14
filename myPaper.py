@@ -21,16 +21,19 @@ def invokeLSAProcess():
 
 
 def invokeWord2VecProcess():
+    outfile = "/usr/dataSet/wiki/zh.wiki.outfile.model"
     global path
     fileList = loadFile(path)
     for i in fileList:
         print(i)
     model = generateWord2VecModel(fileList)
+    model.save(outfile)
+    model.save_word2vec_format(outfile + '.vector', binary=False)
     print(model)
 
 
 if __name__ == "__main__":
-    invokeWord2VecProcess()
+    loadWikiCorups("/usr/dataSet/wiki/zhwiki.txt")
 
 
 
