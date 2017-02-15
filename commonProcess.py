@@ -3,7 +3,7 @@ import os
 from queue import Queue
 
 from langconv import *
-
+import jieba.posseg as pseg
 
 # 1. read the wiki corups and write those to a txt file
 # 2. tranfer the traditional chinese to simplified chinese
@@ -37,6 +37,8 @@ def tranditional2simplified(filePath):
     i = 0
     while curFile.readable():
         curLine = curFile.readline()
+        if(curLine.__eq__("")):
+            break
         line = Converter('zh-hans').convert(curLine)
         output.write(line)
         i = i + 1
@@ -45,6 +47,30 @@ def tranditional2simplified(filePath):
     print(line)
     return
 
+def splitCorups(filePath):
+    curFile = open (filePath,'r',encoding="utf-8")
+    outFile = open("/usr/dataSet/wiki/psegCorups.txt",'w')
+    stopwords = set([line.strip() for line in open('stopwords.txt')])
+    i = 0
+    while curFile.readable():
+        curLine = curFile.readline()
+        if(curLine.__eq__("")):
+            break
+        str = curLine.strip()
+        words = pseg.cut(str)
+        result = []
+        for word,flag in words:
+            if (word not in stopwords and word != ' '):
+                result.append(word)
+
+        str = " ".join(result)
+        outFile.write(str)
+        i = i + 1
+        if i % 1000 == 0:
+            print(i,"finished")
+
+    return
 
 if __name__ == "__main__":
-    tranditional2simplified("/usr/dataSet/wiki/zhwiki.txt")
+    # tranditional2simplified("/usr/dataSet/wiki/zhwiki.txt")
+    splitCorups("/usr/dataSet/wiki/simplifiedCorup.txt")
