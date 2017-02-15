@@ -2,8 +2,10 @@
 import os
 from queue import Queue
 
-from langconv import *
 import jieba.posseg as pseg
+
+from langconv import *
+
 
 # 1. read the wiki corups and write those to a txt file
 # 2. tranfer the traditional chinese to simplified chinese
@@ -63,7 +65,7 @@ def splitCorups(filePath):
             if (word not in stopwords and word != ' '):
                 result.append(word)
 
-        str = " ".join(result)
+        str = " ".join(result) + '\n'
         outFile.write(str)
         i = i + 1
         if i % 1000 == 0:
