@@ -3,7 +3,7 @@ from numpy import mat
 
 if __name__ == "__main__":
 	prePath = "/usr/wikiDataSet"
-    path = prePath + "/pseqSimplifiedCorupsPartition_5000.zh"
+    path = prePath + "/pseqSimplifiedCorupsPartition_5000.zh" 
     WDFile = open(path, "r",encoding="utf-8")
     articleCount = 5000
     wordDict = {}
