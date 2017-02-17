@@ -5,7 +5,7 @@ if __name__ == "__main__":
 	prePath = "/usr/wikiDataSet"
     path = prePath + "/pseqSimplifiedCorupsPartition_5000.zh" 
     WDFile = open(path, "r",encoding="utf-8")
-    articleCount = 5000
+    articleCount = 4000
     wordDict = {}
     words_articles_matrix = []
     curDocument = 0
@@ -48,6 +48,7 @@ if __name__ == "__main__":
     	curDict+=1
     	print("writeDict",curDict,"finished")
 
+		
     outputDictFile.close()	
     
 
