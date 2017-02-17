@@ -3,13 +3,16 @@ from lsaProcess import calcWordWeight
 from numpy import *
 if "__name__" == "__main__":
 	matrixFilePath = "/usr/wikiDataSet/word_document.matrix"
-	matrixFile = open(matrixFile,"r")
+	matrixFile = open(matrixFilePath,"r")
 	wdMatrixList = []
+	curReadLine = 0
 	while(matrixFile.readable()):
-		curLine = matrix.readline()
+		curLine = matrixFile.readline()
+		curReadLine += 1
+		print(curReadLine,"curLine read")
 		if(curLine==""):
 			break
-		curLineList = curLine.splited(" ")
+		curLineList = curLine.split(" ")
 		wdMatrixList.append(curLineList)
 	wdMatrix = mat(wdMatrixList)		
 	wordWeight = calcWordWeight(wdMatrix)
