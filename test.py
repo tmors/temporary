@@ -1,17 +1,25 @@
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import numpy as np
-
-mpl.rcParams['legend.fontsize'] = 10
-
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-theta = np.linspace(-4 * np.pi, 4 * np.pi, 100)
-z = np.linspace(-2, 2, 100)
-r = z ** 2 + 1
-x = r * np.sin(theta)
-y = r * np.cos(theta)
-ax.plot(x, y, z, label='parametric curve')
-ax.legend()
-
-plt.show()
+#coding="utf-8"
+from lsaProcess import calcWordWeight
+from numpy import *
+if "__name__" == "__main__":
+	matrixFilePath = "/usr/wikiDataSet/word_document.matrix"
+	matrixFile = open(matrixFile,"r")
+	wdMatrixList = []
+	while(matrixFile.readable()):
+		curLine = matrix.readline()
+		if(curLine==""):
+			break
+		curLineList = curLine.splited(" ")
+		wdMatrixList.append(curLineList)
+	wdMatrix = mat(wdMatrixList)		
+	wordWeight = calcWordWeight(wdMatrix)
+	curWordWeight = 0
+	outputFilePath = "/usr/wikiDataSet/wordWeight.matrix"
+	outputFile = open(outputFilePath,"w")
+	for i in wordWeight:
+		curWordWeight += 1
+		outputFile.write(i + "\n")
+		print(curWordWeight,"finished")
+	outputFile.close()
+		
+		
