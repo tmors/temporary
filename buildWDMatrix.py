@@ -1,7 +1,7 @@
 from numpy import mat
 
 if __name__ == "__main__":
-    path = "/usr/dataSet/wiki/pseqSimplifiedCorupsPartition_5000.zh"
+    path = "/usr/wikiDataSet/pseqSimplifiedCorupsPartition_5000.zh"
     WDFile = open(path, "r")
     articleCount = 5000
     wordDict = {}
@@ -30,7 +30,7 @@ if __name__ == "__main__":
         print("read", curDocument, "finished")
         curDocument = curDocument + 1
 
-    outputPath = "/usr/dataSet/wiki/word_document.matrix"
+    outputPath = "/usr/wikiDataSet/word_document.matrix"
     outputFile = open(outputPath, "w")
     sumLine = words_articles_matrix.__len__()
     for i in range(0, words_articles_matrix.__len__()):
