@@ -1,8 +1,10 @@
+#coding="utf-8"
 from numpy import mat
 
 if __name__ == "__main__":
-    path = "/usr/wikiDataSet/pseqSimplifiedCorupsPartition_5000.zh"
-    WDFile = open(path, "r")
+	prePath = "Q:/word2vec"
+    path = prePath + "/pseqSimplifiedCorupsPartition_5000.zh"
+    WDFile = open(path, "r",encoding="utf-8")
     articleCount = 5000
     wordDict = {}
     words_articles_matrix = []
@@ -30,7 +32,7 @@ if __name__ == "__main__":
         print("read", curDocument, "finished")
         curDocument = curDocument + 1
 
-    outputPath = "/usr/wikiDataSet/word_document.matrix"
+    outputPath = prePath + "/word_document5000.matrix"
     outputFile = open(outputPath, "w")
     sumLine = words_articles_matrix.__len__()
     for i in range(0, words_articles_matrix.__len__()):
@@ -38,5 +40,15 @@ if __name__ == "__main__":
         outputFile.write(" ".join(str(cur) for cur in curStr) + "\n")
         print("write", i, "/", sumLine, "finished")
     outputFile.close()
+    outputDictPath = prePath + "/word_document.dict"
+    outputDictFile = open(outputDictFile,"w")
+    curDict = 0
+    for i in wordDict:
+    	outputDictFile.write(i+" " + wordDict.get(i) + "\n")
+    	curDict+=1
+    	print("writeDict",curDict,"finished")
+
+    outputDictFile.close()	
+    
 
     words_articles_matrix = mat(words_articles_matrix)
