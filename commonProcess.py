@@ -3,7 +3,7 @@ import os
 from queue import Queue
 
 import jieba.posseg as pseg
-
+from numpy import linalg
 from langconv import *
 
 
@@ -72,6 +72,25 @@ def splitCorups(filePath):
             print(i,"finished")
 
     return
+
+def loadDict(path):
+    dictFile = open(path,"r")
+    dict = {}
+    while(dictFile.readable()):
+        curLine = dictFile.readline()
+        print(curLine)
+        if(curLine==""):
+            break
+        lst = curLine.split(" ")
+        dict[lst[0]] = int(lst[1])
+    return dict
+
+def calcCosDistance(matrix,vec1Index,vec2Index):
+    num = float(matrix[vec1Index]*matrix[vec2Index].T)
+    denom = linalg.norm(matrix[vec1Index)*linalg.norm(matrix[vec2Index])
+    cos = num /denom
+    sim = 0.5 + 0.5 * cos
+    return sim
 
 if __name__ == "__main__":
     # tranditional2simplified("/usr/dataSet/wiki/zhwiki.txt")

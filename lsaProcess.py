@@ -96,11 +96,18 @@ def file2dataSet(fileList):
 
 # calc word's weight use tf-idf
 def calcWordWeight(words_articles_matrix):
+    #make matrix list and then transfer type str to type int
+    words_articles_matrix = [[float(x) for x in row] for row in words_articles_matrix]
     sumOfWordsApperance = sum(words_articles_matrix)
     wordWeight = []
+    countArticle = words_articles_matrix[0].__len__()
     for i in words_articles_matrix:
         sumOfCurWord = sum(i)
-        curWeight = -i * log(sumOfCurWord / sumOfWordsApperance)
+        countNonzero = 0
+        for j in i:
+            if(j!=0):
+                countNonzero += 1
+        curWeight = [-cur * log(sumOfCurWord / sumOfWordsApperance ) for cur in i]
         wordWeight.append(sum(curWeight))
     return wordWeight
 
