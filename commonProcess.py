@@ -87,7 +87,7 @@ def loadDict(path):
 
 def calcCosDistance(matrix,vec1Index,vec2Index):
     num = float(matrix[vec1Index]*matrix[vec2Index].T)
-    denom = linalg.norm(matrix[vec1Index)*linalg.norm(matrix[vec2Index])
+    denom = linalg.norm(matrix[vec1Index])*linalg.norm(matrix[vec2Index])
     cos = num /denom
     sim = 0.5 + 0.5 * cos
     return sim

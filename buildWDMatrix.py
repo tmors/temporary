@@ -5,12 +5,16 @@ from numpy import mat
 def buildWDMatrixByList(listFilePath):
     listFile = open(listFilePath,"r")
     wdMatrixList = []
-    while(listFile.readable()):
+    lineLimitation = 3000
+    curPos = 0
+    while(listFile.readable() and curPos < lineLimitation):
         curLine = listFile.readline()
         if(curLine==""):
             break
         listInt = [int(i) for i in curLine.split(" ")]
+        print(curPos,"finished")
         wdMatrixList.append(listInt)
+        curPos += 1
     wdMatrix = mat(wdMatrixList)
     return wdMatrix
 
