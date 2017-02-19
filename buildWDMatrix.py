@@ -2,20 +2,20 @@
 from numpy import mat
 
 if __name__ == "__main__":
-	prePath = "/usr/wikiDataSet"
+
+    prePath = "/usr/wikiDataSet"
     path = prePath + "/pseqSimplifiedCorupsPartition_5000.zh"
     WDFile = open(path, "r",encoding="utf-8")
-    articleCount = 5000
+    articleCount = 4000
     wordDict = {}
     words_articles_matrix = []
     curDocument = 0
     curWord = 0
     limitLine = 2
-    while (WDFile.readable()):
+    while (WDFile.readable() and curDocument < articleCount):
         curLine = WDFile.readline()
         if (curLine == ""):
             break
-
         wordList = curLine.split(" ")
         for i in wordList:
             if (i == ""):
@@ -41,10 +41,10 @@ if __name__ == "__main__":
         print("write", i, "/", sumLine, "finished")
     outputFile.close()
     outputDictPath = prePath + "/word_document.dict"
-    outputDictFile = open(outputDictFile,"w")
+    outputDictFile = open(outputDictPath,"w")
     curDict = 0
     for i in wordDict:
-    	outputDictFile.write(i+" " + wordDict.get(i) + "\n")
+    	outputDictFile.write(i+" " + str(wordDict.get(i)) + "\n")
     	curDict+=1
     	print("writeDict",curDict,"finished")
 
